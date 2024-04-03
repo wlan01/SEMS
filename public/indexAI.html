@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV File Uploader</title>
+<link rel="stylesheet" href="css/indexAI.css">
+</head>
+<body>
+    
+<script >
+    
+function handleFileUpload(){
+    console.log("hello");
+    const fileInput = document.getElementById('file-input');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = async function (e) {
+            const csvData = e.target.result;
+            const fileName = file.name;
+            console.log("hello2");
+
+            // You would need to send csvData to your server using a fetch request
+            try {
+                const response = await fetch('/indexAI', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/csv',
+                    },
+                    body: csvData,
+                });
+                console.log("hello3");
+                if (response.ok) {
+                    alert(`File ${fileName} uploaded successfully!`);
+                    window.location.href = 'displaycsv.html';
+                } else {
+                    // Handle errors, e.g. display an alert to the user
+                    alert(`Error uploading file ${fileName}.`);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        reader.readAsText(file);
+    } else {
+        alert('Please select a CSV file.');
+    }
+}
+</script>
+    <div id="black-bar">
+        <span><a href="#" th:href="@{/}" id="ems">EMS</a></span>
+    </div>
+
+    <div id="upload-container">
+        <h3>Upload the CSV file here.</h3>
+        <!-- Change the button to a label to trigger the file input -->
+        <label for="file-input">
+            <div id="upload-btn">Submit here</div>
+        </label>
+        <!-- Use input type="file" directly -->
+        <input type="file" id="file-input" accept=".csv" style="display: none" onchange="handleFileUpload()">
+    </div>
+    
+
+</body>
+</html>

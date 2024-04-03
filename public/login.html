@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Page</title>
+<link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+	<div id="black-bar">
+        <span><a href="#" th:href="@{/}" id="ems">EMS</a></span>
+    </div>
+	
+<div class="container">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <input type="submit" value="Login">
+    </form>
+    <div id="error" class="error"></div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        if (email === '' || password === '') {
+            alert("Invalid username or password.");
+        } else {
+            // Here you would handle the login process
+            // For this example, let's just show a success message
+            alert("You have successfully logged in to the app!");
+            // Redirect to home page
+            window.location.href = "HomePage.html"; // Provide the correct path to your home page
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSV File Display</title>
+<link rel="stylesheet" href="css/displaycsv.css">
+<script src="/public/script.js"></script>
+</head>
+<body>
+    
+
+    <div id="black-bar">
+        <span><a href="#" th:href="@{/}" id="ems">EMS</a></span>
+    </div>
+
+    <div id="content-container">
+        <span id="csv-info"></span>
+        <div id="csv-file-name"></div>
+       
+        <div id="prompt-section">
+            <div id="options-and-prompt-container">
+                <div id="option-section">
+                    <input type="radio" id="option-chat" name="ai-option" value="chat" checked>
+                    <label for="option-chat">Chat</label>
+                    <input type="radio" id="option-image" name="ai-option" value="image">
+                    <label for="option-image">Image</label>
+                </div>
+                <div id="prompt-box">
+                    <label for="gpt-prompt">Enter Prompt:</label>
+                    <input type="text" id="gpt-prompt" placeholder="Enter your prompt here">
+                </div>
+            </div>
+            <button id="send-btn">Send</button>
+        </div>
+        
+        <div id="output-container">
+            <strong>Your Output:</strong>
+            <div id="output"></div>
+        </div>
+        
+        <table id="csv-table"></table>
+    </div>
+
+    <script>
+        // Retrieve CSV data and file name from session storage
+        //const csvData = sessionStorage.getItem('uploadedCSVData');
+        //const fileName = sessionStorage.getItem('csvFileName');
+        //const uploadedCSVData = CSVToArray(csvData);
+
+        /*const csvInfo = document.getElementById('csv-info');
+        const csvFileName = document.getElementById('csv-file-name');
+        const csvTable = document.getElementById('csv-table');
+        const promptInput = document.getElementById('prompt-input');
+        const searchBtn = document.getElementById('search-btn');
+
+        csvFileName.textContent = `CSV File Name: ${fileName}`;*/
+        const promptInput = document.getElementById('prompt-input');
+        const csvTable = document.getElementById('csv-table');
+        const searchBtn = document.getElementById('search-btn');
+        const csvInfo = document.getElementById('csv-info');
+        let uploadedCSVData =[];
+
+        async function fetchCSVData() {
+        try {
+        const response = await fetch('/displaycsv');
+        if (!response.ok) throw new Error('Failed to fetch');
+
+        const data = await response.json();
+        
+
+        
+         // Assuming the response includes an array of data and a file name
+        // This is just a placeholder; you'll need to adjust according to your actual response structure
+        const fileName = data.fileName; // Adjust based on your response structure
+        const csvData = data.csvData; // Adjust based on your response structure
+
+        // Now use this data in your existing code
+        
+        const csvFileName = document.getElementById('csv-file-name');
+        
+
+        // Display the file name and the CSV data
+        //csvFileName.textContent = `CSV File Name: ${fileName}`;
+        console.log("data:", data);
+        uploadedCSVData = csvObjectsToArray(data);
+        console.log("in");
+       // processPrompts(uploadedCSVData );
+
+        //window.processPrompts(uploadedCSVData).then(response => {
+       // console.log(response);
+        //});
+
+        displayCSVData(uploadedCSVData);
+        //processPrompts(uploadedCSVData);
+        //processPrompts(option, uploadedCSVData, question);
+        //let output = await processPrompts(option,uploadedCSVData, question);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+/*async function sendPromptToServer() {
+    let promptText = document.getElementById('gpt-prompt').value;
+    let selectedOption = document.querySelector('input[name="ai-option"]:checked').value;
+    
+    // Assuming you have defined or imported processPrompts somewhere in your script
+    // and it returns a promise that resolves with the output you want to display
+    try {
+        // You might need to adjust the processPrompts function or its parameters according to your implementation
+        console.log("Before processPrompts call");
+        let output = await processPrompts(selectedOption, uploadedCSVData, promptText);
+        console.log("After processPrompts call");
+        // Display the output in the "Your Output" box
+        document.getElementById('output').textContent = output;
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('output').textContent = 'Failed to process the prompt.';
+    }
+}*/
+
+document.getElementById('send-btn').addEventListener('click', async function() {
+  let promptText = document.getElementById('gpt-prompt').value;
+  let selectedOption = document.querySelector('input[name="ai-option"]:checked').value;
+  
+  console.log("Before processPrompts call"); // Step 4: Logging before calling processPrompts
+  try {
+    let output = await processPrompts(selectedOption, uploadedCSVData, promptText);
+    console.log("After processPrompts call");// Step 4: Logging after calling processPrompts
+    if (selectedOption === 'image' && typeof output === 'string') {
+      // Display the image in an <img> tag
+      document.getElementById('output').innerHTML = `<img src="${output}" alt="Generated Image">`;
+    } 
+    /*if (selectedOption === 'image') {
+      // If the option is 'image', display the image in an <img> tag
+      document.getElementById('output').innerHTML = `<img src="${output}" alt="Generated Image">`;
+    }*/
+    else {
+      // For other options, display the text output
+      document.getElementById('output').textContent = output;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    document.getElementById('output').textContent = 'Failed to process the prompt.';
+  }
+});
+
+
+async function processPrompts(option, csvData, question) {
+    console.log(option);
+    console.log(csvData);
+    console.log(question);
+    let response = await fetch('/displaycsv', { // Make sure this endpoint matches your server setup
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ option, csvData, question }),
+    });
+    console.log(response.ok);
+    console.log(response.status);
+    console.log(response);
+
+    if (!response.ok) {
+        throw new Error('Server responded with an error.');
+    }
+
+    let data = await response.json();
+    console.log(data);
+    return data.output; // Adjust based on how your server sends the response
+}
+
+
+
+/*function sendPromptToServer() {
+    const promptText = document.getElementById('gpt-prompt').value; // Corrected the ID from 'prompt-input' to 'gpt-prompt'
+    const option = document.querySelector('input[name="ai-option"]:checked').value;
+    
+    // Assuming you're storing the necessary CSV data in a variable `uploadedCSVData`
+    fetch('/displaycsv', { // Adjust the endpoint as necessary
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            option: option,
+            prompt: promptText,
+            csvData: uploadedCSVData
+        }),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}*/
+
+
+
+// Call fetchCSVData when the page loads
+document.addEventListener('DOMContentLoaded', fetchCSVData());
+
+
+        // Display CSV data in a table
+        function displayCSVData(data) {
+            const headers = data[0] ? Object.keys(data[0]) : [];
+            const tableHeader = `<tr>${headers.map(header => `<th>${header}</th>`).join('')}</tr>`;
+            //const tableRows = data.map(row => `<tr>${headers.map(header => `<td>${row[header]}</td>`).join('')}</tr>`);
+            const tableRows = data.slice(0).map(row => `<tr>${headers.map(header => {
+            const cellValue = row[header];
+            // Check if the value is numeric and not an empty string
+            if (!isNaN(cellValue) && cellValue.trim() !== '') {
+                // Format as a double with two decimal places
+                return `<td>${parseFloat(cellValue).toFixed(3)}</td>`;
+            } else {
+                // For non-numeric values, just return the value
+                return `<td>${cellValue}</td>`;
+            }
+        }).join('')
+    }</tr>`);
+
+            csvTable.innerHTML = tableHeader + tableRows.join('');
+        }
+
+        // Search functionality
+        function searchCSV() {
+            console.log("searchcsv");
+            /*const searchTerm = promptInput.value.trim().toLowerCase();
+
+            if (searchTerm !== '') {
+                // Show loading popup message
+                alert('Loading...');
+
+                // Simulate an asynchronous operation (replace with actual search logic)
+                setTimeout(() => {
+                    const filteredData = uploadedCSVData.filter(row =>
+                        Object.values(row).some(value => String(value).toLowerCase().includes(searchTerm))
+                    );
+
+                    // Display CSV data after loading (replace with actual search results)
+                    displayCSVData(filteredData);
+                }, 1000); // Simulating a 1-second delay (replace with actual delay or AJAX call)
+            } else {
+                // If the prompt is empty, display the entire CSV data
+                displayCSVData(uploadedCSVData);
+            }*/
+        }
+
+        // Enable search button only when the prompt is filled
+        /* promptInput.addEventListener('input', () => {
+             searchBtn.disabled = promptInput.value.trim() === '';
+        });*/
+
+        // Initial display of CSV data
+        displayCSVData(uploadedCSVData);
+
+     function csvObjectsToArray(csvObjects) {
+        console.log("hello");
+      if (!csvObjects || csvObjects.length === 0) {
+         return [];
+        }
+        console.log("in2", csvObjects[0],);
+    // Extract headers
+    const headers = Object.keys(csvObjects[0]);
+    console.log(headers);
+
+    // Initialize the result array with headers
+    const resultArray = [headers];
+    console.log(resultArray);
+
+    // Iterate over each object to convert its values to an array
+    csvObjects.forEach(obj => {
+        const rowData = headers.map(header => obj[header]);
+        resultArray.push(rowData);
+    });
+    console.log("final result", resultArray);
+    return resultArray;
+}
+
+        /*// Function to convert CSV string to array
+        function CSVToArray(strData, strDelimiter = ",") {
+            const arrData = [];
+            const arrRows = strData.split("\n");
+
+            for (let i = 0; i < arrRows.length; i++) {
+                const arrCols = arrRows[i].split(strDelimiter);
+                arrData.push(arrCols);
+            }
+
+            return arrData;
+        }*/
+    </script>
+
+</body>
+</html>

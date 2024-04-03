@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Page</title>
+<link rel="stylesheet" href="css/registration.css">
+</head>
+<body>
+
+    <div id="black-bar">
+        <span><a href="#" th:href="@{/}" id="ems">EMS</a></span>
+    </div>
+    
+<div class="container">
+    <h2>Registration</h2>
+    <form id="registrationForm">
+        <input type="text" id="firstName" placeholder="First Name">
+        <input type="text" id="lastName" placeholder="Last Name">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <input type="submit" value="Register">
+    </form>
+    <div id="error" class="error"></div>
+    <div class="already-registered">Already registered? <a href="login.html">Login</a></div>
+</div>
+
+<script>
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var firstName = document.getElementById("firstName").value;
+        var lastName = document.getElementById("lastName").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        if (firstName === '' || lastName === '' || email === '' || password === '') {
+            document.getElementById("error").textContent = "Please fill in all fields.";
+        } else {
+            // Here you would handle the registration process
+            // For this example, let's just show a success message
+            alert("You have successfully registered to the app!");
+            // Redirect to login page
+            window.location.href = "login.html"; // Provide the correct path to your login page
+        }
+    });
+</script>
+</body>
+</html>

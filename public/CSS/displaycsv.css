@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#black-bar {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    padding-left: 50px;
+    text-align: left;
+    /*display: flex;
+    justify-content: space-between;*/
+}
+
+#ems {
+    font-weight: bold;
+    color:red;
+    font-family:Times New Roman;
+    font-size:150%;
+    text-decoration: none;
+}
+
+#content-container {
+    padding: 20px;
+}
+
+#csv-info {
+    margin-bottom: 20px;
+}
+
+#prompt-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+
+#csv-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#csv-table th, #csv-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#csv-table th {
+    background-color: #f2f2f2;
+}
+#option-section {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+#option-section label {
+    margin-right: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+#prompt-box, #gpt-prompt {
+    margin-bottom: 15px;
+    flex-grow: 1; 
+    margin-right: 20px;
+    width: 100%; /* This ensures the input takes the full width of its container */
+    min-width: 300px; /* This is the minimum width you can specify based on your preference */
+    padding: 5px; /* Add padding for aesthetic spacing inside the input field */
+    box-sizing: border-box;
+}
+
+#send-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px ;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ;
+}
+
+#send-btn:hover {
+    background-color: #0056b3;
+}
+
+#output-container {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+}
+
+#output-container strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #000;
+}
+
+#output {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 50px;
+    word-wrap: break-word;
+}
